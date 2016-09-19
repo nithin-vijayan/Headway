@@ -30,10 +30,9 @@ import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-
     static final String KEY_CHECKPOINT_NAME = "checkpoint_name";
     static final String KEY_ASSET_COUNT = "asset_count";
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +58,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 your_array_list);
 
        // listView.setAdapter(arrayAdapter);
+
 
         ArrayList<HashMap<String, String>> check_list = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> map1 = new HashMap<String, String>();
