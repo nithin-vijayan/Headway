@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Headway</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="reminder">Testt</string>
+    <string name="Profile" translatable="false">Profile</string>
+    <string name="Itineraries">Itineraries</string>
+    <string name="new_trip">New Trip</string>
+</resources>
