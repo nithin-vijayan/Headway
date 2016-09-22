@@ -20,8 +20,6 @@ public class MainActivity extends Activity {
     }
 
     public void planItineraries(View view) {
-        Intent intent=new Intent(this,TestActivity.class);
-        startActivity(intent);
 
     }
 }
