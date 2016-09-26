@@ -3,6 +3,7 @@ package com.headway.nk.headway;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -42,6 +43,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static final String KEY_CHECKPOINT_NAME = "checkpoint_name";
     static final String KEY_ASSET_COUNT = "asset_count";
     private static final float LOCATION_REFRESH_DISTANCE = 12;
+    private static final boolean DEVELOPER_MODE =true ;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private Location mLastLocation;
@@ -81,6 +83,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+
+
+
         super.onCreate(savedInstanceState);
         buildGoogleAPIClient();
         setContentView(R.layout.activity_maps);
@@ -88,6 +96,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
 
 
