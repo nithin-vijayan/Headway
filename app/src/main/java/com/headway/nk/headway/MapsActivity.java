@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,GoogleMap.OnInfoWindowClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     static final String KEY_CHECKPOINT_NAME = "checkpoint_name";
     static final String KEY_ASSET_COUNT = "asset_count";
     private static final float LOCATION_REFRESH_DISTANCE = 12;
@@ -48,7 +49,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String mLongitudeText;
     private LocationRequest mLocationRequest;
     private Marker mCurrLocationMarker;
-
+    private ListItemAdapter adapter;
+    private ArrayList<HashMap<String, String>> check_list;
+    private String currentLocationString;
 
     @Override
     protected void onStart() {
@@ -142,6 +145,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         //Location myLocation = googleMap.;  //Nullpointer exception.........
         //LatLng myLatLng = new LatLng(myLocation.getLatitude(),
         //        myLocation.getLongitude());
+        mMap.setOnInfoWindowClickListener(this);
 
         Marker mumbai = mMap.addMarker(new MarkerOptions()
                 .position(MUMBAI)
@@ -172,7 +176,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         // listView.setAdapter(arrayAdapter);
 
-        ArrayList<HashMap<String, String>> check_list = new ArrayList<HashMap<String, String>>();
+        check_list = new ArrayList<HashMap<String, String>>();
         HashMap<String, String> map1 = new HashMap<String, String>();
         HashMap<String, String> map2 = new HashMap<String, String>();
         HashMap<String, String> map3 = new HashMap<String, String>();
@@ -188,14 +192,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         check_list.add(map3);
 
 
-        ListItemAdapter adapter=new ListItemAdapter(this,check_list);
+        adapter=new ListItemAdapter(this,check_list);
         listView.setAdapter(adapter);
 
 
 
 
-
     }
+
 
 
 
@@ -230,6 +234,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             List<android.location.Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
         System.out.println(addresses.get(0).getLocality());
+            currentLocationString =addresses.get(0).getLocality();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -249,6 +254,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title("Current Position");
+        markerOptions.snippet("Tap to add checkpoint");
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
@@ -272,5 +278,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+
+        HashMap<String, String> map4 = new HashMap<String, String>();
+
+        map4.put(MapsActivity.KEY_CHECKPOINT_NAME,currentLocationString);
+        map4.put(MapsActivity.KEY_ASSET_COUNT,"10 photos 12 notes");
+        check_list.add(map4);
+        adapter.notifyDataSetChanged();;
+            Toast.makeText(this, "CheckPoint Added",
+                    Toast.LENGTH_SHORT).show();
     }
 }
