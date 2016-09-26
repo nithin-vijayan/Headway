@@ -7,10 +7,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 <TextView
+    android:id="@+id/checkpoint_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="Mumbai"
-    android:id="@+id/checkpoint_name"
     android:textSize="11pt"/>
 <LinearLayout
     android:layout_width="wrap_content"
@@ -19,25 +19,25 @@
         android:id="@+id/list_image"
         android:layout_width="50dip"
         android:layout_height="50dip"
-        android:src="@drawable/sunbird" />
+        android:src="@drawable/checkpoint" />
     <TextView
+        android:id="@+id/asset_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/asset_count"
         android:text="5 Photos &amp; 10 Notes"/>
 </LinearLayout>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <Button
+            android:id="@+id/photo_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/photo_button"
             android:text="Add Photo"/>
         <Button
+            android:id="@+id/note_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/note_button"
             android:text="Add Note"/>
 </LinearLayout>
     </LinearLayout>
