@@ -287,7 +287,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         map4.put(MapsActivity.KEY_CHECKPOINT_NAME,currentLocationString);
         map4.put(MapsActivity.KEY_ASSET_COUNT,"10 photos 12 notes");
-        check_list.add(map4);
+        check_list.add(0,map4);
         adapter.notifyDataSetChanged();;
             Toast.makeText(this, "CheckPoint Added",
                     Toast.LENGTH_SHORT).show();
