@@ -1,10 +1,18 @@
 package com.headway.nk.headway;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -13,9 +21,11 @@ import android.Manifest;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -38,6 +48,10 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static final String KEY_ASSET_COUNT = "asset_count";
     private static final float LOCATION_REFRESH_DISTANCE = 12;
     private static final boolean DEVELOPER_MODE = true;
+    private static final int REQUEST_CAMERA =0 ;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private Location mLastLocation;
@@ -59,6 +74,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private ListItemAdapter adapter;
     private ArrayList<HashMap<String, String>> check_list;
     private String currentLocationString;
+    private ImageView ivImage;
+    private int REQUEST_IMAGE_GET=1;
+    private ImageView imageview;
+    private int REQUEST_CODE=1231;
 
     @Override
     protected void onStart() {
@@ -302,26 +321,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private void selectImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Gallery",
+             final CharSequence[] items = { "Take Photo", "Choose from Gallery",
                 "Cancel" };
         AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
+
             public void onClick(DialogInterface dialog, int item) {
                 boolean result=true;
-                //result=Utility.checkPermission(MainActivity.this);
+                result=Utility.checkPermission(MapsActivity.this);
                 String userChoosenTask;
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask="Take Photo";
-                    if(result)
-                        //cameraIntent();
+                    if(result) {
+                        cameraIntent();
                         System.out.println(userChoosenTask);
-                } else if (items[item].equals("Choose from Library")) {
+                    }
+                } else if (items[item].equals(items[1])) {
                     userChoosenTask="Choose from Library";
-                    if(result)
-                        //galleryIntent();
-                        System.out.println(userChoosenTask);
+                    if(result) {
+                        galleryIntent();
+                    }
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
                 }
@@ -329,6 +349,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         });
         builder.show();
     }
+
+
+    private void galleryIntent()
+    {
+        Intent pickPhoto = new Intent(Intent.ACTION_GET_CONTENT);
+        pickPhoto.setType("image/*");
+        startActivityForResult(pickPhoto , 1);
+
+    }
+
+    private void cameraIntent()
+    {
+        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case 0:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    imageview.setImageURI(selectedImage);
+                }
+
+                break;
+            case 1:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    imageview.setImageURI(selectedImage);
+                }
+                break;
+        }
+    }
+
+
 
 
 }
