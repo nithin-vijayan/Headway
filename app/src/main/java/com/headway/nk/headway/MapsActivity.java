@@ -1,5 +1,6 @@
 package com.headway.nk.headway;
 
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
@@ -10,8 +11,12 @@ import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.Manifest;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -43,7 +48,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     static final String KEY_CHECKPOINT_NAME = "checkpoint_name";
     static final String KEY_ASSET_COUNT = "asset_count";
     private static final float LOCATION_REFRESH_DISTANCE = 12;
-    private static final boolean DEVELOPER_MODE =true ;
+    private static final boolean DEVELOPER_MODE = true;
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private Location mLastLocation;
@@ -68,7 +73,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
 
-
     private synchronized void buildGoogleAPIClient() {
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -85,10 +89,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void onCreate(Bundle savedInstanceState) {
 
 
-
-
-
-
         super.onCreate(savedInstanceState);
         buildGoogleAPIClient();
         setContentView(R.layout.activity_maps);
@@ -98,16 +98,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync(this);
 
 
-
-
-        }
-
-
-
-
-
-
-
+    }
 
 
     /**
@@ -122,8 +113,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng MUMBAI = new LatLng(19.0767311,72.875607);
-        LatLng PUNE = new LatLng(18.5128501,73.861448);
+        LatLng MUMBAI = new LatLng(19.0767311, 72.875607);
+        LatLng PUNE = new LatLng(18.5128501, 73.861448);
 
 
         // Add a marker in Sydney and move the camera
@@ -138,15 +129,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     1);
 
 
-
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
-        }
-        else{
+        } else {
 
 
         }
@@ -164,8 +153,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
 
         //Marker myLocationMarker = mMap.addMarker(new MarkerOptions()
-         //       .position(myLatLng)
-         //       .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+        //       .position(myLatLng)
+        //       .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         mMap.moveCamera(center);
         mMap.animateCamera(zoom);
 
@@ -190,27 +179,22 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         HashMap<String, String> map2 = new HashMap<String, String>();
         HashMap<String, String> map3 = new HashMap<String, String>();
 
-        map1.put(MapsActivity.KEY_CHECKPOINT_NAME,"Mumbai");
-        map1.put(MapsActivity.KEY_ASSET_COUNT,"10 photos 12 notes");
+        map1.put(MapsActivity.KEY_CHECKPOINT_NAME, "Mumbai");
+        map1.put(MapsActivity.KEY_ASSET_COUNT, "10 photos 12 notes");
         check_list.add(map1);
-        map2.put(MapsActivity.KEY_CHECKPOINT_NAME,"Chennai");
-        map2.put(MapsActivity.KEY_ASSET_COUNT,"110 photos 112 notes");
+        map2.put(MapsActivity.KEY_CHECKPOINT_NAME, "Chennai");
+        map2.put(MapsActivity.KEY_ASSET_COUNT, "110 photos 112 notes");
         check_list.add(map2);
-        map3.put(MapsActivity.KEY_CHECKPOINT_NAME,"Kolkata");
-        map3.put(MapsActivity.KEY_ASSET_COUNT,"1110 photos 132 notes");
+        map3.put(MapsActivity.KEY_CHECKPOINT_NAME, "Kolkata");
+        map3.put(MapsActivity.KEY_ASSET_COUNT, "1110 photos 132 notes");
         check_list.add(map3);
 
 
-        adapter=new ListItemAdapter(this,check_list);
+        adapter = new ListItemAdapter(this, check_list);
         listView.setAdapter(adapter);
 
 
-
-
     }
-
-
-
 
 
     @Override
@@ -237,13 +221,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     }
 
-    public void reverseGeocode(Location location)
-    {
+    public void reverseGeocode(Location location) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
             List<android.location.Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-        System.out.println(addresses.get(0).getLocality());
-            currentLocationString =addresses.get(0).getLocality();
+            System.out.println(addresses.get(0).getLocality());
+            currentLocationString = addresses.get(0).getLocality();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -294,11 +277,58 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         HashMap<String, String> map4 = new HashMap<String, String>();
 
-        map4.put(MapsActivity.KEY_CHECKPOINT_NAME,currentLocationString);
-        map4.put(MapsActivity.KEY_ASSET_COUNT,"10 photos 12 notes");
-        check_list.add(0,map4);
-        adapter.notifyDataSetChanged();;
-            Toast.makeText(this, "CheckPoint Added",
-                    Toast.LENGTH_SHORT).show();
+        map4.put(MapsActivity.KEY_CHECKPOINT_NAME, currentLocationString);
+        map4.put(MapsActivity.KEY_ASSET_COUNT, "10 photos 12 notes");
+        check_list.add(0, map4);
+        adapter.notifyDataSetChanged();
+        ;
+        Toast.makeText(this, "CheckPoint Added",
+                Toast.LENGTH_SHORT).show();
     }
+
+    public void photoButtonClicked(View view) {
+
+        LinearLayout vwParentRow = (LinearLayout) view.getParent();
+        Button btnChild = (Button) vwParentRow.getChildAt(0);
+        selectImage();
+
+    }
+
+    public void noteButtonClicked(View view) {
+
+        LinearLayout vwParentRow = (LinearLayout) view.getParent();
+
+        Button btnChild = (Button) vwParentRow.getChildAt(1);
+    }
+
+    private void selectImage() {
+        final CharSequence[] items = { "Take Photo", "Choose from Gallery",
+                "Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                boolean result=true;
+                //result=Utility.checkPermission(MainActivity.this);
+                String userChoosenTask;
+                if (items[item].equals("Take Photo")) {
+                    userChoosenTask="Take Photo";
+                    if(result)
+                        //cameraIntent();
+                        System.out.println(userChoosenTask);
+                } else if (items[item].equals("Choose from Library")) {
+                    userChoosenTask="Choose from Library";
+                    if(result)
+                        //galleryIntent();
+                        System.out.println(userChoosenTask);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+
 }
