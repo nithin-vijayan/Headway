@@ -1,12 +1,17 @@
 package com.headway.nk.headway;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,10 +20,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class TestActivity extends AppCompatActivity {
+public class TestActivity extends Activity {
 
+    private static final int REQUEST_CAMERA =0 ;
+    private static final int REQUEST_GALLERY =1 ;
     private ListItemAdapter adapter;
     private ArrayList<HashMap<String, String>> check_list;
+    private boolean mReturnWithResult=false;
+    private Intent imageReturnedIntentResumed;
+    private int resultCodeResumed;
+    private int requestCodeResumed;
+    private ImageView imageview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +66,37 @@ public class TestActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+       /* if(mReturnWithResult)
+        {
+            System.out.print(imageReturnedIntentResumed.getExtras()!=null);
+            System.out.print(imageReturnedIntentResumed.getExtras().get("data")!=null);
+            switch(requestCodeResumed) {
+                case 0:
+                    if(resultCodeResumed == RESULT_OK && imageReturnedIntentResumed.getExtras() != null){
+                        Bundle extras = imageReturnedIntentResumed.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        imageview.setImageBitmap(imageBitmap);
+
+                    }
+
+                    break;
+                case 1:
+                    if(resultCodeResumed == RESULT_OK && imageReturnedIntentResumed.getExtras() != null){
+                        Bundle extras = imageReturnedIntentResumed.getExtras();
+                        Bitmap imageBitmap = (Bitmap) extras.get("data");
+                        imageview.setImageBitmap(imageBitmap);
+                    }
+                    break;
+            }
+        }
+        mReturnWithResult=false;
+
+*/
+    }
+
     public void photoButtonClicked(View view) {
 
         LinearLayout vwParentRow = (LinearLayout)view.getParent();
@@ -79,24 +122,73 @@ public class TestActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 boolean result=true;
-                //result=Utility.checkPermission(MainActivity.this);
+                //result=Utility.checkPermission(TestActivity.this);
                 String userChoosenTask;
-                if (items[item].equals("Take Photo")) {
+                if (items[item].equals("Take Photo"))
+                {
                     userChoosenTask="Take Photo";
                     if(result)
-                        //cameraIntent();
-                    System.out.println(userChoosenTask);
-                } else if (items[item].equals("Choose from Library")) {
+                    {
+                        cameraIntent();
+                        System.out.println(userChoosenTask);
+                    }
+                }
+                else if (items[item].equals("Choose from Library"))
+                {
                     userChoosenTask="Choose from Library";
                     if(result)
-                        //galleryIntent();
+                    {
+                        galleryIntent();
                         System.out.println(userChoosenTask);
-                } else if (items[item].equals("Cancel")) {
+                    }
+                }
+                else if (items[item].equals("Cancel"))
+                {
                     dialog.dismiss();
                 }
             }
         });
-        builder.show();
     }
+
+
+    private void cameraIntent()
+    {
+        System.out.println("asd");
+
+        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        System.out.print(intent.resolveActivity(getPackageManager()) != null);
+        System.out.println("asd");
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_CAMERA);
+        }
+    }
+
+
+    private void galleryIntent()
+    {
+        Intent pickPhoto = new Intent(Intent.ACTION_GET_CONTENT);
+        pickPhoto.setType("image/*");
+        if (pickPhoto.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(pickPhoto, REQUEST_GALLERY);
+        }
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        mReturnWithResult=true;
+        resultCodeResumed=resultCode;
+        requestCodeResumed=requestCode;
+        imageReturnedIntentResumed=imageReturnedIntent;
+        System.out.print(imageReturnedIntentResumed.getExtras()!=null);
+        System.out.print(imageReturnedIntentResumed.getExtras().get("data")!=null);
+
+    }
+
+
+
 }
 

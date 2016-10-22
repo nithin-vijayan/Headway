@@ -14,7 +14,8 @@
     android:textSize="11pt"/>
 <LinearLayout
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <ImageView
         android:id="@+id/list_image"
         android:layout_width="50dip"
@@ -53,10 +54,18 @@
                 android:layout_marginLeft="20dp"
                 android:background="@drawable/note_button"
                 android:onClick="noteButtonClicked" />
+
         </LinearLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/photo_thumb"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginLeft="10dp" />
 </LinearLayout>
 
 </LinearLayout>
+
 </RelativeLayout>
